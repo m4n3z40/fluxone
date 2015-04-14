@@ -1,0 +1,42 @@
+{
+  "name": "fluxone",
+  "version": "0.0.1",
+  "description": "A React powered isomorphic framework.",
+  "main": "bootstrap.js",
+  "dependencies": {
+    "babel": "^5.0.9",
+    "express": "^4.12.3",
+    "fluxone-core": "file:local_modules/core",
+    "fluxone-mixins": "file:local_modules/mixins",
+    "fluxone-utils": "file:local_modules/utils",
+    "isomorphic-fetch": "^2.0.1",
+    "lodash": "^3.6.0",
+    "react": "^0.13.0",
+    "react-router": "^0.13.0"
+  },
+  "devDependencies": {
+    "browserify": "^9.0.7",
+    "gulp": "^3.8.11",
+    "jest-cli": "^0.4.0"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m4n3z40/fluxone.git"
+  },
+  "keywords": [
+    "React",
+    "ES6",
+    "ES2015",
+    "Isomorphic",
+    "Flux"
+  ],
+  "author": "Allan Baptista (allan.marques@ymail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/m4n3z40/fluxone/issues"
+  },
+  "homepage": "https://github.com/m4n3z40/fluxone"
+}
