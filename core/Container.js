@@ -1,5 +1,7 @@
 'use strict';
 
+import _ from 'lodash';
+
 const VALUE = 0;
 const FACTORY = 1;
 const SINGLETON = 2;
@@ -129,6 +131,8 @@ export default class Container {
             result = value();
         } else if (_.isArray(value) && Container.isInjectableArray(value)) {
             result = this._injectFromArray(value)();
+        } else {
+            result = value;
         }
 
         this._cacheResolved(resolver, result);

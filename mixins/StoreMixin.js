@@ -2,7 +2,8 @@
 
 var _ = require('lodash');
 
-import { Application, Store } from 'fluxone-core';
+import Application from 'core/Application.js';
+import Store from 'core/Store.js';
 
 /**
  * Default handler name
@@ -100,7 +101,7 @@ export default {
     _normalizeCustomStoreListeners(listeners) {
         var normalizedHandlers = [];
 
-        _.forIn(listeners, function(handler, storeName) {
+        _.forIn(listeners, (handler, storeName) => {
             if (_.isString(handler)) {
                 handler = this[handler];
             }

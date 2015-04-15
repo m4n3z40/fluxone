@@ -1,13 +1,13 @@
 'use strict';
 
-import Application from './Application.js';
+import Application from 'core/Application.js';
 
 /**
- * Service class
+ * Action class of the flux architecture
  *
  * @class
  */
-export default class Service {
+export default class Action {
     /**
      * Class constructor
      *
@@ -37,5 +37,16 @@ export default class Service {
      */
     get app() {
         return this._app;
+    }
+
+    /**
+     * Executes the action
+     *
+     * @param {Object} payload
+     * @param {Function} callback
+     * @return {Promise|void}
+     */
+    execute(payload, callback) {
+        throw new Error('This action has not been implemented yet.');
     }
 }

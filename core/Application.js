@@ -1,16 +1,16 @@
 'use strict';
 
-var _ = require('lodash'),
-    React = require('react'),
-    Router = require('react-router'),
-    EventEmitter = require('event-emitter');
-
-import { ResponseUtils } from 'fluxone-utils';
-import ConfigManager from './ConfigManager.js';
-import Container from './Container.js'
-import Store from './Store.js';
-import Action from './Action.js';
-import Service from './Service.js';
+import _ from 'lodash';
+import React from 'react';
+import Router from 'react-router';
+import EventEmitter from 'event-emitter';
+import ResponseUtils from 'utils/ResponseUtils.js';
+import ConfigManager from 'core/ConfigManager.js';
+import Container from 'core/Container.js';
+import Store from 'core/Store.js';
+import Action from 'core/Action.js';
+import Service from 'core/Service.js';
+import SiteTitle from 'core/SiteTitle.js';
 
 /**
  * Prefix for the stores contained in the container
@@ -59,19 +59,60 @@ export const EVENT_EMITTER_KEY = 'event-emitter';
  */
 export default class Application {
     /**
-     * Instantiates an application with the default dependencies
+     * Class constructor
      *
-     * @constructor
+     * @param {array|Object} configBundle
+     * @param {array} utils
+     * @param {string} env
      */
-    constructor(configBundle, utils) {
+    constructor(configBundle, utils, env) {
         this._registeredStores = [];
         this._routes = null;
 
         this._container = new Container();
         this._container.registerSingleton(EVENT_EMITTER_KEY, () => EventEmitter());
-        this._container.registerSingleton(CONFIG_KEY, new ConfigManager(configBundle));
+        this._container.registerSingleton(CONFIG_KEY, new ConfigManager(configBundle, env));
 
-        _.forEach(utils, (item) => this.utils(item.name, item.util));
+        if (utils) this.addUtils(utils);
+
+        this._prepareSiteTitle();
+    }
+
+    /**
+     * Prepares the site title with the default config
+     *
+     * @private
+     */
+    _prepareSiteTitle() {
+        let mainConfig = this.config('main');
+
+        if (mainConfig) {
+            this.siteTitle = new SiteTitle(mainConfig.baseTitle, mainConfig.titleSeparator);
+        }
+    }
+
+    /**
+     * Sets the site title manager
+     *
+     * @param {SiteTitle} siteTitle
+     */
+    set siteTitle(siteTitle) {
+        if (siteTitle instanceof SiteTitle) {
+            return this._siteTitle = siteTitle;
+        }
+
+        if (_.isString(siteTitle)) {
+            this._siteTitle.set(siteTitle);
+        }
+    }
+
+    /**
+     * Gets the site title manager
+     *
+     * @return {SiteTitle}
+     */
+    get siteTitle() {
+        return this._siteTitle;
     }
 
     /**
@@ -118,17 +159,36 @@ export default class Application {
     }
 
     /**
+     * Adds a list of util objects to the container
+     *
+     * @param {array|Object} utils
+     */
+    addUtils(utils) {
+        if (_.isArray(utils)) {
+            return _.forEach(utils, (item) => this.util(item.name, item.util));
+        }
+
+        if (_.isObject(utils)) {
+            return _.forOwn(utils, (util, name) => this.util(name, util));
+        }
+
+        throw new Error('Invalid list of utilities, it must be an array or an hash object.');
+    }
+
+    /**
      * Gets a util from the app container
      *
      * @param {string} name
      * @param {Function|Object} util
      */
     util(name, util = null) {
+        let utilKey = UTILS_PREFIX + name;
+
         if (!util && !_.isObject(util) && !_.isFunction(util)) {
-            return this.get(UTILS_PREFIX + name);
+            return this.get(utilKey);
         }
 
-        this.value(UTILS_PREFIX + name, util);
+        this.value(utilKey, util);
     }
 
     /**
@@ -342,14 +402,20 @@ export default class Application {
      * Renders the app on the server
      *
      * @param {string} currentUrl
-     * @param {Object} globalProps
-     * @param {Function} callback
+     * @param {Object} rootProps
+     * @return {Promise}
      */
-    renderServer(currentUrl, globalProps, callback) {
-        Router.run(this._routes, currentUrl, (Handler) => {
-            let content = React.renderToString(React.createElement(Handler, globalProps));
+    renderServer(currentUrl, rootProps) {
+        return new Promise((resolve, reject) => {
+            return Router.run(this._routes, currentUrl, (Handler) => {
+                try {
+                    let content = React.renderToString(React.createElement(Handler, rootProps));
 
-            if (callback) callback(content);
+                    resolve(content);
+                } catch (e) {
+                    reject(e);
+                }
+            });
         });
     }
 
@@ -357,11 +423,11 @@ export default class Application {
      * Renders the app on the client
      *
      * @param {HTMLElement} container
-     * @param {Object} globalProps
+     * @param {Object} rootProps
      */
-    renderClient(container, globalProps) {
+    renderClient(container, rootProps) {
         Router.run(this._routes, Router.HistoryLocation, (Handler) => {
-            React.render(React.createElement(Handler), globalProps, container);
-        })
+            React.render(React.createElement(Handler), rootProps, container);
+        });
     }
 }

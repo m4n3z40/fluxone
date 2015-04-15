@@ -5,11 +5,11 @@
   "main": "bootstrap.js",
   "dependencies": {
     "babel": "^5.0.9",
+    "body-parser": "^1.12.2",
+    "event-emitter": "^0.3.3",
     "express": "^4.12.3",
-    "fluxone-core": "file:local_modules/core",
-    "fluxone-mixins": "file:local_modules/mixins",
-    "fluxone-utils": "file:local_modules/utils",
     "isomorphic-fetch": "^2.0.1",
+    "jade": "^1.9.2",
     "lodash": "^3.6.0",
     "react": "^0.13.0",
     "react-router": "^0.13.0"
@@ -20,7 +20,10 @@
     "jest-cli": "^0.4.0"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "gulp build",
+    "start": "gulp serve",
+    "watch": "gulp watch"
   },
   "repository": {
     "type": "git",

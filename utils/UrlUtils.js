@@ -26,7 +26,7 @@ export function serialize(obj) {
  * @param {string} query
  * @return {Object}
  */
-export function parse(query) {
+export function parseQuery(query) {
     var match,
         urlParams = {};
 

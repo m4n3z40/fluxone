@@ -1,5 +1,7 @@
 'use strict';
 
+import _ from 'lodash';
+
 export const DEVELOPMENT = 'development';
 export const TESTING = 'testing';
 export const PRODUCTION = 'production';
@@ -17,10 +19,10 @@ export default class ConfigManager {
      * @param {string} environment
      * @constructor
      */
-    constructor(configBundle, environment = DEVELOPMENT) {
+    constructor(configBundle, environment = null) {
         this._registry = {};
-        this._env = environment;
-        this.setNany(configBundle);
+        this._env = environment !== null ? environment : DEVELOPMENT;
+        this.setMany(configBundle);
     }
 
     /**

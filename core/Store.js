@@ -1,7 +1,8 @@
 'use strict';
 
-var _ = require('lodash');
-var hasListenersIn = require('event-emitter/has-listeners');
+import _ from 'lodash';
+import Application from 'core/Application.js';
+
 var instancesCount =  0;
 
 /**
@@ -13,11 +14,11 @@ export default class Store {
     /**
      * Class constructor
      *
-     * @param {Object} eventEmitter
+     * @param {Application} app
      * @param {Object} handlers
      */
-    constructor(eventEmitter, handlers = {}) {
-        this.eventEmitter = eventEmitter;
+    constructor(app, handlers = {}) {
+        this.app = app;
         this.handlers = _.assign(this.getActionHandlers(), handlers);
 
         this._instanceId = ++instancesCount;
@@ -74,15 +75,15 @@ export default class Store {
      * @param {Object} handlers
      */
     set handlers(handlers) {
-        let mediator = this.eventEmitter;
+        let app = this.app;
 
-        if (mediator && this._handlers) {
+        if (app && this._handlers) {
             removeActionHandlers(this);
         }
 
         this._handlers = handlers;
 
-        if (mediator) registerActionHandlers(this);
+        if (app) registerActionHandlers(this);
     }
 
     /**
@@ -95,33 +96,33 @@ export default class Store {
     }
 
     /**
-     * Sets the eventEmitter that will take care of action dispatching in the store.
+     * Sets the app that will take care of action dispatching in the store.
      *
-     * @param {Object} eventEmitter
+     * @param {Object} app
      */
-    set eventEmitter(eventEmitter) {
+    set app(app) {
         let handlers = this.handlers;
 
-        if (!eventEmitter) {
-            throw new Error('EventEmitter object required to instantiate th Store.')
+        if (!(app instanceof Application)) {
+            throw new Error('Parameter must be an instance of Application.')
         }
 
-        if (handlers && this._eventEmitter) {
+        if (handlers && this._app) {
             removeActionHandlers(this);
         }
 
-        this._eventEmitter = eventEmitter;
+        this._app = app;
 
         if (handlers) registerActionHandlers(this);
     }
 
     /**
-     * Gets the eventEmitter instance.
+     * Gets the app instance.
      *
      * @return {Object}
      */
-    get eventEmitter() {
-        return this._eventEmitter;
+    get app() {
+        return this._app;
     }
 
     /**
@@ -139,16 +140,7 @@ export default class Store {
      * @param {Function} listener
      */
     registerListener(listener) {
-        this.eventEmitter.on(this.changeActionName, listener);
-    }
-
-    /**
-     * Returns if there are listeners waiting changes of this store
-     *
-     * @return {boolean}
-     */
-    hasListeners() {
-        return hasListenersIn(this.eventEmitter, this.changeActionName);
+        this.app.on(this.changeActionName, listener);
     }
 
     /**
@@ -157,14 +149,14 @@ export default class Store {
      * @param {Function} listener
      */
     removeListener(listener) {
-        this.eventEmitter.off(this.changeActionName, listener);
+        this.app.off(this.changeActionName, listener);
     }
 
     /**
      * Notifies all listeners that the store has changed its state
      */
     emitChanges() {
-        this.eventEmitter.fire(this.changeActionName, this);
+        this.app.emit(this.changeActionName, this);
     }
 }
 
@@ -175,7 +167,7 @@ export default class Store {
  */
 function registerActionHandlers(store) {
     _.forOwn(store.handlers, (handler, actionName) => {
-        store.eventEmitter.on(actionName, _.isFunction(handler) ? handler : _.bind(store[handler], store));
+        store.app.on(actionName, _.isFunction(handler) ? handler : _.bind(store[handler], store));
     });
 }
 
@@ -186,6 +178,6 @@ function registerActionHandlers(store) {
  */
 function removeActionHandlers(store) {
     _.forOwn(store.handlers, (handler, actionName) => {
-        store.eventEmitter.off(actionName, _.isFunction(handler) ? handler : _.bind(store[handler], store));
+        store.app.off(actionName, _.isFunction(handler) ? handler : _.bind(store[handler], store));
     });
 }
