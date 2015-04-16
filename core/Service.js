@@ -18,6 +18,15 @@ export default class Service {
     }
 
     /**
+     * Return the name of the service for dependency container use
+     *
+     * @return {string}
+     */
+    get name() {
+        throw new Error('You have to implement a getter with the signature "get name()" returning the service identifier.');
+    }
+
+    /**
      * Sets the app instance
      *
      * @param {Application} app

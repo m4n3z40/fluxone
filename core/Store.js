@@ -64,7 +64,7 @@ export default class Store {
      * @return {string}
      */
     get name() {
-        return 'base';
+        throw new Error('You have to implement a getter with the signature "get name()" returning the store identifier.');
     }
 
     /**

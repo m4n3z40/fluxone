@@ -18,6 +18,15 @@ export default class Action {
     }
 
     /**
+     * Return the name of the action for dependency container use
+     *
+     * @return {string}
+     */
+    get name() {
+        throw new Error('You have to implement a getter with the signature "get name()" returning the action identifier.');
+    }
+
+    /**
      * Sets the app instance
      *
      * @param {Application} app
