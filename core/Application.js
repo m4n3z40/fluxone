@@ -427,7 +427,7 @@ export default class Application {
      */
     renderClient(container, rootProps) {
         Router.run(this._routes, Router.HistoryLocation, (Handler) => {
-            React.render(React.createElement(Handler), rootProps, container);
+            React.render(React.createElement(Handler, rootProps), container);
         });
     }
 }

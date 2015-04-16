@@ -30,3 +30,9 @@ node_modules
 
 #IDE Project files
 .idea
+
+#Client build files
+public/css/app.css
+public/css/app.css.map
+public/js/app.js
+public/js/app.js.map

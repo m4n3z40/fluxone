@@ -1,3 +1,5 @@
+'use strict';
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import jade from 'jade';
@@ -11,7 +13,7 @@ import bootstrapApplication from 'bootstrap-application.js';
  * @param {string} env
  * @return {Server}
  */
-export default function bootstrap(configBundle = null, utils = null, env = null) {
+export default function bootstrap(configBundle = {}, utils = {}, env = null) {
     //Creates the server express instance
     let server = express();
 

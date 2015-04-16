@@ -11,7 +11,9 @@ export default class RootComponent extends React.Component {
 
     render() {
         return (
-            <RouteHandler {...this.props} />
+            <div>
+                <RouteHandler {...this.props} />
+            </div>
         );
     }
 }

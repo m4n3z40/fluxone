@@ -1,11 +1,15 @@
+'use strict';
+
 require('babel/register');
 
-var bootstrapServer = require('bootstrap-server.js');
+var env = process.env.NODE_ENV;
+
+var serverConfig = require('configs/es5/server.js')[env];
+
+//Instantiates and Bootstraps server
+var server = require('bootstrap-server.js')({}, {} , env);
 
 //Start the server
-var server = bootstrapServer().listen(3000, '127.0.0.1', function() {
-    var host = server.address().address;
-    var port = server.address().port;
-
-    console.log('Started server at http://%s:%s', host, port);
+server.listen(serverConfig.port, serverConfig.address, function() {
+    console.log('Started server at http://%s:%s', serverConfig.host, serverConfig.port);
 });

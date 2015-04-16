@@ -1,8 +1,10 @@
+'use strict';
+
 import bootstrapApplication from 'bootstrap-application.js';
 
 //Instantiates and configures the application
 Object.defineProperty(window, 'fluxone', {
-    value: bootstrapApplication(),
+    value: bootstrapApplication({}, {}, process.env.NODE_ENV),
     configurable: true
 });
 
