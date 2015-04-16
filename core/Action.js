@@ -14,7 +14,9 @@ export default class Action {
      * @param {Application} app
      */
     constructor(app = null) {
-        this.app = app;
+        if (app) {
+            this.app = app;
+        }
     }
 
     /**
@@ -52,10 +54,9 @@ export default class Action {
      * Executes the action
      *
      * @param {Object} payload
-     * @param {Function} callback
      * @return {Promise|void}
      */
-    execute(payload, callback) {
+    execute(payload) {
         throw new Error('This action has not been implemented yet.');
     }
 }

@@ -18,7 +18,10 @@ export default class Store {
      * @param {Object} handlers
      */
     constructor(app, handlers = {}) {
-        this.app = app;
+        if (app) {
+            this.app = app;
+        }
+
         this.handlers = _.assign(this.getActionHandlers(), handlers);
 
         this._instanceId = ++instancesCount;

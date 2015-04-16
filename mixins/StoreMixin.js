@@ -1,7 +1,6 @@
 'use strict';
 
-var _ = require('lodash');
-
+import _ from 'lodash';
 import Application from 'core/Application.js';
 import Store from 'core/Store.js';
 

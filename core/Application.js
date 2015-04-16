@@ -4,7 +4,6 @@ import _ from 'lodash';
 import React from 'react';
 import Router from 'react-router';
 import EventEmitter from 'event-emitter';
-import ResponseUtils from 'utils/ResponseUtils.js';
 import ConfigManager from 'core/ConfigManager.js';
 import Container from 'core/Container.js';
 import Store from 'core/Store.js';
@@ -201,6 +200,10 @@ export default class Application {
             throw new Error('the parameter must be an instance of Store.');
         }
 
+        if (!store.app) {
+            store.app = this;
+        }
+
         if (!store.eventEmitter) {
             store.eventEmitter = this.get(EVENT_EMITTER_KEY);
         }
@@ -244,6 +247,10 @@ export default class Application {
             throw new Error('The parameter must be an instance of Action.');
         }
 
+        if (!action.app) {
+            action.app = this;
+        }
+
         this.singleton(ACTIONS_PREFIX + action.name, action);
     }
 
@@ -261,17 +268,16 @@ export default class Application {
      *
      * @param {string} name
      * @param {*} payload
-     * @param {Function} callback
      * @return {Promise|void}
      */
-    executeAction(name, payload, callback) {
-        let actionKey = ACTIONS_PREFIX + name;
+    executeAction(name, payload) {
+        let action = this.get(ACTIONS_PREFIX + name);
 
-        if (!this._container.has(actionKey)) {
+        if (!action) {
             throw new Error(`Action '${name}' was not registered in the app container, therefore it cannot be executed.`);
         }
 
-        return this.get(actionKey).execute(payload, callback);
+        return action.execute(payload);
     }
 
     /**
@@ -283,6 +289,10 @@ export default class Application {
     addService(service) {
         if (!(service instanceof Service)) {
             throw new Error('The parameter must be an instance of Service.');
+        }
+
+        if (!service.app) {
+            service.app = this;
         }
 
         this.singleton(SERVICES_PREFIX + service.name, service);

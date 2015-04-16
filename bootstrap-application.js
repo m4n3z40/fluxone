@@ -5,15 +5,21 @@ import _ from 'lodash';
 import Application from 'core/Application.js';
 
 //Importing necessary utils here
-import * as ResponseUtils from 'utils/ResponseUtils.js';
-import * as UrlUtils from 'utils/UrlUtils.js';
+import * as responseUtils from 'utils/responseUtils.js';
+import * as urlUtils from 'utils/urlUtils.js';
 
 //Importing necessary configs here
-import * as mainConfig from 'configs/main.js';
-import * as urlsConfig from 'configs/urls.js';
+import * as mainConfig from 'configs/mainConfig.js';
+import * as urlsConfig from 'configs/urlsConfig.js';
 
 //Importing app routes
 import getRoutes from 'routes.js';
+
+//Importing actions
+import HelloWorldAction from 'actions/HelloWorldAction.js';
+
+//Importing stores
+import HelloWorldStore from 'stores/HelloWorldStore.js';
 
 /**
  * Instantiates the application instance, bootstrapping with all needed data and returns it
@@ -40,13 +46,20 @@ export default function bootstrap(configBundle = {}, utils = {}, env = null) {
      * @type {Object}
      */
     utils = _.assign({
-        response: ResponseUtils,
-        url: UrlUtils
+        response: responseUtils,
+        url: urlUtils
     }, utils);
 
     let app = new Application(configBundle, utils, env);
 
+    //Adding routes
     app.routes = getRoutes();
+
+    //Adding actions
+    app.addAction(new HelloWorldAction());
+
+    //Adding stores
+    app.addStore(new HelloWorldStore());
 
     return app;
 };

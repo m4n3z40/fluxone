@@ -14,7 +14,9 @@ export default class Service {
      * @param {Application} app
      */
     constructor(app = null) {
-        this.app = app;
+        if (app) {
+            this.app = app;
+        }
     }
 
     /**
