@@ -1,6 +1,6 @@
 'use strict';
 
-import Application from 'core/Application.js';
+import Application from './Application.js';
 
 /**
  * Action class of the flux architecture

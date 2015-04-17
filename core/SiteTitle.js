@@ -24,7 +24,7 @@ export default class SiteTitle {
     get full() {
         let segments = this.segments;
 
-        return this.base + (segments.length > 0 ? segments.join(this.segmentSeparator) : '');
+        return this.base + (segments.length > 0 ? this.segmentSeparator + segments.join(this.segmentSeparator) : '');
     }
 
     /**

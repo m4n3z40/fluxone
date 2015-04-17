@@ -1,7 +1,7 @@
 'use strict';
 
 import _ from 'lodash';
-import Application from 'core/Application.js';
+import Application from './Application.js';
 
 var instancesCount =  0;
 
@@ -160,6 +160,15 @@ export default class Store {
      */
     emitChanges() {
         this.app.emit(this.changeActionName, this);
+    }
+
+    /**
+     * Returns a indicator telling if this has listeners
+     *
+     * @return {boolean}
+     */
+    hasListeners() {
+        return this.app.hasListeners(this.changeActionName);
     }
 }
 

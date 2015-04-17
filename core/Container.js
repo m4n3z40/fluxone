@@ -205,9 +205,7 @@ export default class Container {
             throw new Error('Invalid parameter. second parameter must be a function.');
         }
 
-        let injections = [];
-
-        _.forEach(dependencies, (dep) => injections.push(this.get(dep)));
+        let injections = _.map(dependencies, (dep) => this.get(dep));
 
         return function() { return callable(...injections); };
     }

@@ -4,28 +4,28 @@
   "description": "A React powered isomorphic framework.",
   "main": "bootstrap.js",
   "dependencies": {
-    "babel": "^5.0.9",
-    "body-parser": "^1.12.2",
+    "babel": "^5.1.10",
+    "body-parser": "^1.12.3",
     "event-emitter": "^0.3.3",
     "express": "^4.12.3",
     "isomorphic-fetch": "^2.0.1",
     "jade": "^1.9.2",
-    "lodash": "^3.6.0",
-    "pm2": "^0.12.10",
+    "lodash": "^3.7.0",
+    "pm2": "^0.12.11",
     "react": "^0.13.0",
     "react-router": "^0.13.0"
   },
   "devDependencies": {
+    "babel-jest": "*",
     "babelify": "^6.0.2",
     "browser-sync": "^2.6.4",
     "browserify": "^9.0.7",
     "gulp": "^3.8.11",
-    "gulp-open": "^0.3.2",
     "gulp-sourcemaps": "^1.5.1",
     "gulp-stylus": "^2.0.1",
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.4",
-    "jest-cli": "^0.4.0",
+    "jest-cli": "*",
     "run-sequence": "^1.0.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
@@ -38,6 +38,29 @@
     "start": "NODE_PATH=. gulp serve",
     "stop": "pm2 stop server.js && pm2 delete server.js",
     "restart": "npm stop && npm start"
+  },
+  "jest": {
+    "setupEnvScriptFile": "<rootDir>/bootstrap-tests.js",
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "testFileExtensions": [
+      "es6",
+      "js"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "es6"
+    ],
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/*",
+      "<rootDir>/actions/*",
+      "<rootDir>/core/*",
+      "<rootDir>/components/*",
+      "<rootDir>/mixins/*",
+      "<rootDir>/services/*",
+      "<rootDir>/stores/*",
+      "<rootDir>/utils/*"
+    ]
   },
   "repository": {
     "type": "git",

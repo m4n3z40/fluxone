@@ -4,12 +4,13 @@ import _ from 'lodash';
 import React from 'react';
 import Router from 'react-router';
 import EventEmitter from 'event-emitter';
-import ConfigManager from 'core/ConfigManager.js';
-import Container from 'core/Container.js';
-import Store from 'core/Store.js';
-import Action from 'core/Action.js';
-import Service from 'core/Service.js';
-import SiteTitle from 'core/SiteTitle.js';
+import HasListeners from 'event-emitter/has-listeners';
+import ConfigManager from './ConfigManager.js';
+import Container from './Container.js';
+import Store from './Store.js';
+import Action from './Action.js';
+import Service from './Service.js';
+import SiteTitle from './SiteTitle.js';
 
 /**
  * Prefix for the stores contained in the container
@@ -406,6 +407,16 @@ export default class Application {
      */
     emit(event, ...args) {
         this.get(EVENT_EMITTER_KEY).emit(event, ...args);
+    }
+
+    /**
+     * Returns a indicator telling if an event has listeners
+     *
+     * @param {string} event
+     * @return {boolean}
+     */
+    hasListeners(event) {
+        return HasListeners(this.get(EVENT_EMITTER_KEY), event);
     }
 
     /**
