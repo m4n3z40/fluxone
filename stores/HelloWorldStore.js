@@ -75,8 +75,8 @@ export default class HelloWorldStore extends Store {
 }
 
 var called = 0,
-    subjects = ['Isomorphism', 'React', 'Node', 'io.js', 'flux', 'React router', 'Jade', 'Stylus', 'express', 'ES2015', 'javascript'],
-    adjectives = ['awesome', 'great', 'fast', 'flexible', 'the future', 'the best', 'easy', 'incredible', 'unbelievable', 'very good'];
+    subjects = ['isomorphism', 'react', 'node', 'io.js', 'flux', 'react router', 'jade', 'stylus', 'express', 'es2015', 'javascript', 'html5'],
+    adjectives = ['awesome', 'great', 'fast', 'flexible', 'the future', 'the best', 'easy', 'incredible', 'unbelievable', 'very good', 'fabulous'];
 
 /**
  * Return random data for the hello world
