@@ -18,7 +18,8 @@ var paths = require('./configs/es5/paths'),
     pm2 = require('pm2'),
     _ = require('lodash'),
     browserSync = require('browser-sync').create(),
-    reload = browserSync.reload;
+    reload = browserSync.reload,
+    runSequence = require('run-sequence');
 
 /**
  * Declaring reusable configurations
@@ -62,26 +63,22 @@ function devBundle() {
 }
 
 /**
- * Starts the pm with the server
- *
- * @param {Function} callback
+ * Starts the server process
  */
-function startServer(callback) {
+gulp.task('start-server', function(done) {
     pm2.connect(function() {
-        pm2.start(paths.serverEntryPoint, callback);
+        pm2.start(paths.serverEntryPoint, done);
     });
-}
+});
 
 /**
- * Restarts the server
- *
- * @param {Function} callback
+ * Restart the server process
  */
-function restartServer(callback) {
+gulp.task('restart-server', function(done) {
     pm2.connect(function() {
-        pm2.restart(paths.serverEntryPoint, callback);
+        pm2.restart(paths.serverEntryPoint, done);
     });
-}
+});
 
 /**
  * Transforms es6 to es5 and bundles the app js together for the client to consume
@@ -129,11 +126,6 @@ gulp.task('css:prod', function() {
 });
 
 /**
- * Restart the server process
- */
-gulp.task('restart-pm2', restartServer);
-
-/**
  * Runs the js:dev & css:dev tasks
  */
 gulp.task('build:dev', ['js:dev', 'css:dev']);
@@ -154,7 +146,7 @@ gulp.task('build', [isDevelopment ? 'build:dev' : 'build:prod']);
  */
 gulp.task('watch:dev', function(done) {
     gulp.watch(paths.developmentStylesWatchers, ['css:dev']);
-    gulp.watch(paths.developmentJSWatchers, ['restart-pm2']);
+    gulp.watch(paths.developmentJSWatchers, ['restart-server']);
     gulp.watch(paths.developmentLayoutsWatchers, reload);
 
     browserSync.init({ proxy: serverConfig[env].address + ':' + serverConfig[env].port });
@@ -167,7 +159,7 @@ gulp.task('watch:dev', function(done) {
  * Restarts the server with any change
  */
 gulp.task('watch:prod', function(done) {
-    gulp.watch(paths.productionWatchers, ['build:prod', 'restart-pm2']);
+    gulp.watch(paths.productionWatchers, ['build:prod', 'restart-server']);
 
     done();
 });
@@ -180,12 +172,26 @@ gulp.task('watch', [isDevelopment ? 'watch:dev' : 'watch:prod']);
 /**
  * Runs the server in development mode
  */
-gulp.task('serve:dev', ['build:dev', 'watch:dev'], startServer);
+gulp.task('serve:dev', function(done) {
+    runSequence(
+        'build:dev',
+        'start-server',
+        'watch:dev',
+        done
+    );
+});
 
 /**
  * Runs the server in production mode
  */
-gulp.task('serve:prod', ['build:prod', 'watch:prod'], startServer);
+gulp.task('serve:prod', function(done) {
+    runSequence(
+        'build:prod',
+        'start-server',
+        'watch:prod',
+        done
+    );
+});
 
 /**
  * Runs the serve tasks depending on which environment we are in

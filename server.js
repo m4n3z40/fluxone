@@ -2,12 +2,10 @@
 
 require('babel/register');
 
-var env = process.env.NODE_ENV;
-
-var serverConfig = require('configs/es5/server.js')[env];
+var serverConfig = require('configs/es5/server.js')[process.env.NODE_ENV];
 
 //Instantiates and Bootstraps server
-var server = require('bootstrap-server.js')({}, {} , env);
+var server = require('bootstrap-server.js');
 
 //Start the server
 server.listen(serverConfig.port, serverConfig.address, function() {
